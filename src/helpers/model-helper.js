@@ -112,6 +112,7 @@ module.exports = {
       name: args.name,
       attributes: this.transformAttributes(args.attributes),
       underscored: args.underscored,
+      schema: args.schema,
     });
   },
 

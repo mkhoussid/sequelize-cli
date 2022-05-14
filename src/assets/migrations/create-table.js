@@ -26,10 +26,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }, {
+      schema: '<%= schema %>'
     });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('<%= tableName %>');
+    await queryInterface.dropTable('<%= tableName %>', {
+      schema: '<%= schema %>'
+    });
   }
 };

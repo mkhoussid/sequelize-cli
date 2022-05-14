@@ -58,6 +58,11 @@ export function _baseOptions(yargs) {
       describe: 'When available show various debug information',
       default: false,
       type: 'boolean',
+    })
+    .option('schema', {
+      describe: 'Indicate the schema',
+      default: 'public',
+      type: 'string',
     });
 }
 
