@@ -17,15 +17,31 @@ module.exports = {
         },
       <% }) %>
 
-      <%= createdAt %>: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-
-      <%= updatedAt %>: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
+      <% associations.forEach(function(association) { %>
+        <%= association.modelName %>_id: {
+          type: Sequelize.DataTypes.INTEGER,
+          references: {
+            model: {
+              tableName: '<%= association.tableName %>',
+              schema: '<%= schema %>'
+            },
+            key: 'id'
+          },
+          allowNull: false,
+          unique: true
+        },
+      <% }) %>
+		// userId: {
+		// 	type: Sequelize.DataTypes.INTEGER,
+		// 	references: {
+		// 	  model: {
+		// 		tableName: 'users',
+		// 		schema: 'schema'
+		// 	  },
+		// 	  key: 'id'
+		// 	},
+		// 	allowNull: false
+		//   },
     }, {
       schema: '<%= schema %>'
     });

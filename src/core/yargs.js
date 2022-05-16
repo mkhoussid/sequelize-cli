@@ -30,6 +30,11 @@ export function _baseOptions(yargs) {
       describe: 'The path to the config file',
       type: 'string',
     })
+    .option('schema', {
+      describe: 'The schema name',
+      type: 'string',
+      demandOption: true
+    })
     .option('options-path', {
       describe: 'The path to a JSON file with additional options',
       type: 'string',
@@ -58,11 +63,6 @@ export function _baseOptions(yargs) {
       describe: 'When available show various debug information',
       default: false,
       type: 'boolean',
-    })
-    .option('schema', {
-      describe: 'Indicate the schema',
-      default: 'public',
-      type: 'string',
     });
 }
 

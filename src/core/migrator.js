@@ -38,9 +38,15 @@ export async function getMigrator(type, args) {
   }
 
   const sequelize = getSequelizeInstance();
+
   const migrator = new Umzug({
     storage: helpers.umzug.getStorage(type),
-    storageOptions: helpers.umzug.getStorageOptions(type, { sequelize }),
+    storageOptions: {
+        ..._index.default.umzug.getStorageOptions(type, {
+        sequelize
+      }),
+      schema: args.schema
+    },
     logging: helpers.view.log,
     migrations: {
       params: [sequelize.getQueryInterface(), Sequelize],
@@ -55,7 +61,7 @@ export async function getMigrator(type, args) {
       // Check if this is a PostgreSQL run and if there is a custom schema specified, and if there is, check if it's
       // been created. If not, attempt to create it.
       if (helpers.version.getDialectName() === 'pg') {
-        const customSchemaName = helpers.umzug.getSchema('migration');
+        const customSchemaName = args.schema; // _index.default.umzug.getSchema('migration');
         if (customSchemaName && customSchemaName !== 'public') {
           return sequelize.createSchema(customSchemaName);
         }

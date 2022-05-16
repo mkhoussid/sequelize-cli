@@ -10,10 +10,12 @@ module.exports = {
 
   generateTableCreationFileContent(args) {
     return helpers.template.render('migrations/create-table.js', {
-      tableName: this.getTableName(args.name),
+      tableName: args.name, // this.getTableName(args.name),
       attributes: helpers.model.transformAttributes(args.attributes),
+      associations: args.associations ? _index.default.model.transformAttributes(args.associations, false) : [],
       createdAt: args.underscored ? 'created_at' : 'createdAt',
       updatedAt: args.underscored ? 'updated_at' : 'updatedAt',
+      schema: args.schema
     });
   },
 
@@ -23,7 +25,7 @@ module.exports = {
 
   generateTableCreationFile(args) {
     const migrationName = this.generateMigrationName(args);
-    const migrationPath = helpers.path.getMigrationPath(migrationName);
+    const migrationPath = helpers.path.getMigrationPath(migrationName, args.schema);
 
     helpers.asset.write(
       migrationPath,

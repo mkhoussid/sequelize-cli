@@ -36,9 +36,9 @@ module.exports = {
     return result;
   },
 
-  getFileName(type, name, options) {
+  getFileName(type, name, options = {}) {
     return this.addFileExtension(
-      [getCurrentYYYYMMDDHHmms(), name ? name : 'unnamed-' + type].join('-'),
+      [getCurrentYYYYMMDDHHmms(), options.schema ? options.schema : 'schema', name ? name : 'unnamed-' + type].join('-'),
       options
     );
   },
@@ -51,17 +51,17 @@ module.exports = {
     return [basename, this.getFileExtension(options)].join('.');
   },
 
-  getMigrationPath(migrationName) {
+  getMigrationPath(migrationName, schema) {
     return path.resolve(
       this.getPath('migration'),
-      this.getFileName('migration', migrationName)
+      this.getFileName('migration', migrationName, {schema})
     );
   },
 
-  getSeederPath(seederName) {
+  getSeederPath(seederName, schema) {
     return path.resolve(
       this.getPath('seeder'),
-      this.getFileName('seeder', seederName)
+      this.getFileName('seeder', seederName, {schema})
     );
   },
 

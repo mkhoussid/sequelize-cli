@@ -15,14 +15,14 @@ function validateDataType(dataType) {
   return dataType;
 }
 
-function formatAttributes(attribute) {
+function formatAttributes(attribute, isAttributes) {
   let result;
   const split = attribute.split(':');
 
   if (split.length === 2) {
     result = {
-      fieldName: split[0],
-      dataType: split[1],
+      [isAttributes ? 'fieldName' : 'modelName']: split[0],
+      [isAttributes ? 'dataType' : 'tableName']: split[1],
       dataFunction: null,
       dataValues: null,
     };
@@ -37,8 +37,8 @@ function formatAttributes(attribute) {
 
     if (isValidFunction && isValidValue && !isValidValues) {
       result = {
-        fieldName: split[0],
-        dataType: split[2],
+        [isAttributes ? 'fieldName' : 'modelName']: split[0],
+        [isAttributes ? 'dataType' : 'tableName']: split[2],
         dataFunction: split[1],
         dataValues: null,
       };
@@ -46,8 +46,8 @@ function formatAttributes(attribute) {
 
     if (isValidFunction && !isValidValue && isValidValues) {
       result = {
-        fieldName: split[0],
-        dataType: split[1],
+        [isAttributes ? 'fieldName' : 'modelName']: split[0],
+        [isAttributes ? 'dataType' : 'tableName']: split[1],
         dataFunction: null,
         dataValues: split[2]
           .replace(/(^\{|\}$)/g, '')
@@ -62,7 +62,7 @@ function formatAttributes(attribute) {
 }
 
 module.exports = {
-  transformAttributes(flag) {
+  transformAttributes(flag, isAttributes = true) {
     /*
       possible flag formats:
       - first_name:string,last_name:string,bio:text,role:enum:{Admin, 'Guest User'},reviews:array:string
@@ -93,14 +93,16 @@ module.exports = {
       .split(/\s{2,}/);
 
     return attributeStrings.map((attribute) => {
-      const formattedAttribute = formatAttributes(attribute);
+      const formattedAttribute = formatAttributes(attribute, isAttributes);
 
-      try {
-        validateDataType(formattedAttribute.dataType);
-      } catch (err) {
-        throw new Error(
-          `Attribute '${attribute}' cannot be parsed: ${err.message}`
-        );
+      if (isAttributes) {
+        try {
+          validateDataType(formattedAttribute.dataType);
+        } catch (err) {
+          throw new Error(
+            `Attribute '${attribute}' cannot be parsed: ${err.message}`
+          );
+        }
       }
 
       return formattedAttribute;
@@ -111,8 +113,7 @@ module.exports = {
     return helpers.template.render('models/model.js', {
       name: args.name,
       attributes: this.transformAttributes(args.attributes),
-      underscored: args.underscored,
-      schema: args.schema,
+      underscored: args.underscored
     });
   },
 

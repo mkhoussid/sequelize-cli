@@ -16,6 +16,15 @@ exports.builder = (yargs) =>
         type: 'string',
         demandOption: true,
       })
+      .option('associations', {
+        describe: 'A list of associations',
+        type: 'string'
+      })
+      .option('schema', {
+        describe: 'Indicate the schema',
+        default: 'public',
+        type: 'string',
+      })
       .option('force', {
         describe: 'Forcefully re-creates model with the same name',
         type: 'string',
